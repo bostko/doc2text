@@ -1,0 +1,1 @@
+require 'doc2text'

@@ -1,12 +1,5 @@
 #!/usr/bin/env ruby
 
-class MyDocument < Nokogiri::XML::SAX::Document
-  def end_document
-    puts "the document has ended"
-  end
-
-  def start_element name, attributes = []
-    puts "#{name} started"
-  end
-end
+$LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
+require 'doc2text'
 

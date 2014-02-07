@@ -16,9 +16,9 @@ describe 'odt' do
        content.xml settings.xml styles.xml META-INF META-INF/manifest.xml meta.xml Thumbnails Thumbnails/thumbnail.png mimetype).map { |entry|
       File.join @odt.extract_path, entry }.should eq entries
   end
+end
 
-  it 'has a content file' do
-    parser = Doc2Text::Odt2MdXpath.new @odt
-    parser.parse_content
+describe 'simple parsing' do
+  it 'simple integration test' do
   end
 end

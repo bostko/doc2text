@@ -5,7 +5,24 @@ module Doc2Text
     EXTRACT_EXTENSION = 'unpacked_odt'
 
     def self.parse_and_save(input, output)
+      odt = new input
+      markdown = Markdown::Document.new output
+      begin
+        odt.parse markdown
+      ensure
+        markdown.close
+      end
+    end
 
+    def parse(markdown)
+      unpack
+      begin
+        content = Content::Document.new markdown
+        parser = Nokogiri::XML::SAX::Parser.new content
+        parser.parse open('content.xml')
+      ensure
+        clean
+      end
     end
 
     def initialize(document_path)
@@ -37,12 +54,12 @@ module Doc2Text
 
     # Parse xml file from the current odt
     def xml_file(filename, rood_node_name)
-      doc = Nokogiri::XML::Document.parse(open(filename)) { |config| config.strict }
+      Nokogiri::XML::Document.parse(open(filename)) { |config| config.strict }
       root_node = doc.root
       if root_node.name != rood_node_name or root_node.namespace.prefix != 'office'
         raise XmlError, 'Document does not have correct root element'
       else
-        doc
+        open(filename)
       end
     end
 

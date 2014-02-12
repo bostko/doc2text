@@ -1,24 +1,18 @@
 module Doc2Text
   class Odt
     module Content
-      class Document < Nokogiri::XML::SAX::Document
+      class Document < ::Nokogiri::XML::SAX::Document
         def initialize(markdown_document)
           @markdown_document = markdown_document
         end
 
         def start_element_namespace(name ,attrs = [], prefix = nil, uri = nil, ns = [])
-          puts "BEGIN NAMESPACE NAME: #{name},  PREFIX: #{prefix}, URI: #{uri}, NS: #{ns}"
-          if ['text',].include?(prefix)
-            clazz = Content.const_get prefix.capitalize
-            @markdown_document << clazz.instance.send(name)
-          end
+          puts "BEGIN NAMESPACE NAME: #{name},  PREFIX: #{prefix}, ATTRS: #{attrs} URI: #{uri}, NS: #{ns}"
+          @markdown_document.new_node prefix, name, attrs
         end
 
         def end_element_namespace(name, prefix = nil, uri = nil)
-          if ['text',].include?(prefix)
-            clazz = Content.const_get prefix.capitalize
-            @markdown_document << clazz.instance.send(name)
-          end
+          @markdown_document.close_node prefix, name
         end
 
         def characters(string)
@@ -26,34 +20,6 @@ module Doc2Text
             @markdown_document << string
           end
         end
-      end
-
-      class Text
-        include ::Singleton
-
-        def p
-          "\n"
-        end
-
-        def method_missing(name, *args, &block)
-          puts "!No such tag #{name}"
-        end
-      end
-    end
-  end
-
-  module Markdown
-    class Document
-      def initialize(output)
-        @output = File.open output, 'w'
-      end
-
-      def <<(string)
-        @output << string
-      end
-
-      def close
-        @output.close
       end
     end
   end

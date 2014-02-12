@@ -17,8 +17,8 @@ module Doc2Text
     def parse(markdown)
       unpack
       begin
-        content = Content::Document.new markdown
-        parser = Nokogiri::XML::SAX::Parser.new content
+        content = ::Doc2Text::Odt::Content::Document.new markdown
+        parser = Nokogiri::XML::SAX::Parser.new(content) # { |config| config.strict}
         parser.parse open('content.xml')
       ensure
         clean

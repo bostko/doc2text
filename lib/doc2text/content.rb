@@ -7,7 +7,6 @@ module Doc2Text
         end
 
         def start_element_namespace(name ,attrs = [], prefix = nil, uri = nil, ns = [])
-          puts "BEGIN NAMESPACE NAME: #{name},  PREFIX: #{prefix}, ATTRS: #{attrs} URI: #{uri}, NS: #{ns}"
           @markdown_document.new_node prefix, name, attrs
         end
 

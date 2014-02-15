@@ -1,18 +1,14 @@
 module Doc2Text
   class Odt
     module XmlNodes
-      # TODO make it automatically inherited in the classes inside Office, Style
-      def self.const_missing(name)
-        puts "CONST_MISSING: #{name}"
-      end
 
+      # TODO make it automatically inherited in the classes inside Office, Style
       class Node
         attr_reader :parent
         attr_accessor :children, :attrs
 
         def self.create_node(prefix, name, parent = nil, attrs = [])
           begin
-            puts "#{prefix}::#{name}"
             clazz = XmlNodes.const_get "#{titleize prefix}::#{titleize name}"
           rescue NameError => e
             new(parent, attrs, prefix, name)
@@ -27,12 +23,11 @@ module Doc2Text
 
         def initialize(parent = nil, attrs = [], prefix = nil, name = nil)
           @parent, @attrs, @prefix, @name = parent, attrs, prefix, name
-          puts "prefix #{@prefix} name #{name}"
           @children = []
         end
 
         def root?
-          @parent
+          !@parent
         end
 
         def open
@@ -45,6 +40,10 @@ module Doc2Text
 
         def <<(child)
           @children << child
+        end
+
+        def delete_on_close?
+          true
         end
 
         def eql?(object)
@@ -70,20 +69,28 @@ module Doc2Text
         end
 
         def visit
-          puts "TAG: #{name} ATTRS: #{attrs}"
+          #puts "TAG: #{name} ATTRS: #{attrs}"
         end
-      end
 
-      module Office
-
-      end
-
-      module Style
-
+        def to_s
+          "#{xml_name} : #{attrs}"
+        end
       end
 
       # These are the namespaces available in the open document format
       # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os.html
+      module Office
+        class AutomaticStyles < Node
+          def visit
+            :automatic_styles
+          end
+
+          def delete_on_close?
+            false
+          end
+        end
+      end
+
       module Animation; end
       module Chart; end
       module Config; end
@@ -94,12 +101,22 @@ module Doc2Text
       module Manifest; end
       module Meta; end
       module DataStyle; end
-      module Office; end
       module Presentation; end
       module Script; end
       module Table; end
-      module Text; end
-      module Style; end
+      module Style
+        class Style < Node
+          def delete_on_close?
+            false
+          end
+        end
+
+        class TextProperties < Node
+          def delete_on_close?
+            false
+          end
+        end
+      end
       module XslFoCompatible; end
       module SvgCompatible; end
       module SmilCompatible; end

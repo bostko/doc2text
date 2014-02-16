@@ -18,17 +18,6 @@ module Doc2Text
         end
       end
 
-      # Select nodes xpath style
-      # - supports selecting from the root node
-      def xpath(string)
-        mach_data = /^(\/\w+)+$/.match string
-        if mach_data
-
-        else
-          raise Doc2Text::XmlError, "it does not support this xpath syntax"
-        end
-      end
-
       def close_node(prefix, name)
         puts "CLOSE_NODE: #{prefix} #{name}"
         if @current_node.root?
@@ -82,6 +71,23 @@ module Doc2Text
         puts node.to_s
         node.children.each do |child|
           print_tree child
+        end
+      end
+
+      # Select nodes xpath style
+      # - supports selecting from the root node
+      def xpath(string)
+        if /^(\/[\w:\-]+)+$/ =~ string
+          path = string.scan /[\w:\-]+/
+          seek_nodes = [@xml_root]
+          path.each do |xml_name|
+            seek_nodes.select! { |node| node.xml_name == xml_name }
+            seek_nodes = seek_nodes.map(&:children).flatten
+            break if seek_nodes.empty?
+          end
+          seek_nodes
+        else
+          raise Doc2Text::XmlError, "it does not support this xpath syntax"
         end
       end
     end

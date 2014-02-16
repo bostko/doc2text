@@ -6,23 +6,23 @@ module Doc2Text
 
     def self.parse_and_save(input, output)
       odt = new input
-      markdown = Markdown::Document.new output
       begin
-        odt.parse markdown
+        odt.unpack
+        markdown = Markdown::Document.new output
+        begin
+          odt.parse markdown
+        ensure
+          markdown.close
+        end
       ensure
-        markdown.close
+        odt.clean
       end
     end
 
     def parse(markdown)
-      unpack
-      begin
-        content = ::Doc2Text::Odt::Content::Document.new markdown
-        parser = Nokogiri::XML::SAX::Parser.new(content) # { |config| config.strict}
-        parser.parse open('content.xml')
-      ensure
-        clean
-      end
+      content = ::Doc2Text::Odt::Content::Document.new markdown
+      parser = Nokogiri::XML::SAX::Parser.new(content) # { |config| config.strict}
+      parser.parse open 'content.xml'
     end
 
     def initialize(document_path)

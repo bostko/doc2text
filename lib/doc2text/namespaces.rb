@@ -65,7 +65,7 @@ module Doc2Text
         end
 
         def xml_name
-          "#{self.class.titleize @prefix}::#{self.class.titleize @name}"
+          "#{@prefix}:#{@name}"
         end
 
         def visit
@@ -87,6 +87,12 @@ module Doc2Text
 
           def delete_on_close?
             false
+          end
+        end
+
+        class DocumentContent < Node
+          def delete_on_close?
+            false # required for testing purposes. After a document has been parsed, some tests could be run against the tree built
           end
         end
       end

@@ -9,9 +9,9 @@ module Doc2Text
       def new_node(prefix, name, attrs)
         puts "NEW_NODE: #{prefix} #{name}"
         unless @xml_root
-          @xml_root = @current_node = Odt::XmlNodes::Node.create_node prefix, name, nil, attrs
+          @xml_root = @current_node = Odt::XmlNodes::Node.create_node prefix, name, nil, attrs, self
         else
-          new_node = Odt::XmlNodes::Node.create_node prefix, name, @current_node, attrs
+          new_node = Odt::XmlNodes::Node.create_node prefix, name, @current_node, attrs, self
           @current_node.children << new_node
           @current_node = new_node
           self << @current_node.open
@@ -64,9 +64,6 @@ module Doc2Text
         @output.close
       end
 
-      def add_automatic_style(style)
-      end
-
       def print_tree(node)
         puts node.to_s
         node.children.each do |child|
@@ -80,11 +77,12 @@ module Doc2Text
         if /^(\/[\w:\-]+)+$/ =~ string
           path = string.scan /[\w:\-]+/
           seek_nodes = [@xml_root]
-          path.each do |xml_name|
+          path.each_with_index do |xml_name, index|
             seek_nodes.select! { |node| node.xml_name == xml_name }
-            seek_nodes = seek_nodes.map(&:children).flatten
+            seek_nodes = seek_nodes.map(&:children).flatten unless index == path.length - 1
             break if seek_nodes.empty?
           end
+
           seek_nodes
         else
           raise Doc2Text::XmlError, "it does not support this xpath syntax"

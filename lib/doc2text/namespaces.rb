@@ -67,10 +67,6 @@ module Doc2Text
           "#{@prefix}:#{@name}"
         end
 
-        def visit
-          #puts "TAG: #{name} ATTRS: #{attrs}"
-        end
-
         def to_s
           "#{xml_name} : #{attrs}"
         end

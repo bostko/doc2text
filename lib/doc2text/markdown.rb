@@ -7,7 +7,6 @@ module Doc2Text
       end
 
       def new_node(prefix, name, attrs)
-        puts "NEW_NODE: #{prefix} #{name}"
         unless @xml_root
           @xml_root = @current_node = Odt::XmlNodes::Node.create_node prefix, name, nil, attrs, self
         else
@@ -19,10 +18,9 @@ module Doc2Text
       end
 
       def close_node(prefix, name)
-        puts "CLOSE_NODE: #{prefix} #{name}"
         if @current_node.root?
-          print_tree @current_node
-          puts "Tree printed #{@current_node.root?}"
+          #print_tree @current_node
+          #puts "Tree printed #{@current_node.root?}"
         end
         #if !@current_node.delete_on_close?
         if Odt::XmlNodes::Node.create_node(prefix, name).eql? @current_node
@@ -85,7 +83,7 @@ module Doc2Text
 
           seek_nodes
         else
-          raise Doc2Text::XmlError, "it does not support this xpath syntax"
+          raise Doc2Text::XmlError, 'it does not support this xpath syntax'
         end
       end
     end

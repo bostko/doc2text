@@ -72,8 +72,10 @@ module Doc2Text
         end
       end
 
+      #
       # These are the namespaces available in the open document format
       # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os.html
+      #
       module Office
         class AutomaticStyles < Node
           def visit

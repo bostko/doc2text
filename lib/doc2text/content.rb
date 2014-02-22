@@ -1,5 +1,5 @@
 module Doc2Text
-  class Odt
+  module Odt
     module Content
       class Document < ::Nokogiri::XML::SAX::Document
         def initialize(markdown_document)

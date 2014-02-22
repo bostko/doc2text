@@ -1,83 +1,17 @@
 module Doc2Text
-  class Odt
+  module Odt
     module XmlNodes
-
-      # TODO make it automatically inherited in the classes inside Office, Style
-      class Node
-        attr_reader :parent, :children, :attrs
-
-        def self.create_node(prefix, name, parent = nil, attrs = [], markdown_document = nil)
-          begin
-            clazz = XmlNodes.const_get "#{titleize prefix}::#{titleize name}"
-          rescue NameError => e
-            new(parent, attrs, prefix, name, markdown_document)
-          else
-            clazz.new(parent, attrs, prefix, name, markdown_document)
-          end
-        end
-
-        def self.titleize(tag)
-          tag.split('-').map(&:capitalize).join
-        end
-
-        def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_document = nil)
-          @parent, @attrs, @prefix, @name = parent, attrs, prefix, name
-          @children = []
-        end
-
-        def root?
-          !@parent
-        end
-
-        def open
-          ''
-        end
-
-        def close
-          ''
-        end
-
-        def <<(child)
-          @children << child
-        end
-
-        def delete_on_close?
-          true
-        end
-
-        def eql?(object)
-          return false unless object.is_a? Node
-          object.xml_name == xml_name
-        end
-
-        def generic?
-          instance_of? Node
-        end
-
-        def remove_last_child!(child)
-          unless child === @children.last
-            # TODO remove this redundant(tree build algorithm) checks
-            raise Doc2Text::XmlError, "!The child #{child} IS NOT among the children of #{self}"
-          else
-            @children.pop
-          end
-        end
-
-        def xml_name
-          "#{@prefix}:#{@name}"
-        end
-
-        def to_s
-          "#{xml_name} : #{attrs}"
-        end
+      class Generic
+        include Node
       end
-
       #
       # These are the namespaces available in the open document format
       # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os.html
       #
       module Office
-        class AutomaticStyles < Node
+        class AutomaticStyles
+          include Node
+
           def visit
             :automatic_styles
           end
@@ -87,7 +21,9 @@ module Doc2Text
           end
         end
 
-        class DocumentContent < Node
+        class DocumentContent
+          include Node
+
           def delete_on_close?
             false # required for testing purposes. After a document has been parsed, some tests could be run against the tree built
           end
@@ -108,13 +44,17 @@ module Doc2Text
       module Script; end
       module Table; end
       module Style
-        class Style < Node
+        class Style
+          include Node
+
           def delete_on_close?
             false
           end
         end
 
-        class TextProperties < Node
+        class TextProperties
+          include Node
+
           def delete_on_close?
             false
           end
@@ -160,7 +100,8 @@ module Doc2Text
         end
 
         # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-part1.html#__RefHeading__1419256_253892949
-        class P < Node
+        class P
+          include Node
           include Text
 
           def self.style_family
@@ -176,14 +117,18 @@ module Doc2Text
           end
         end
 
-        class LineBreak < Node
+        class LineBreak
+          include Node
+
           def open
             '<br/>'
           end
         end
 
         # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-part1.html#__RefHeading__1419264_253892949
-        class Span < Node
+        class Span
+          include Node
+
           include Text
 
           def self.style_family
@@ -197,6 +142,13 @@ module Doc2Text
           def close
             @enclosing_style.reverse.join
           end
+        end
+
+        # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-part1.html#__RefHeading__1415154_253892949
+        class ListItem
+          include Node
+
+          #child :p, close: false
         end
       end
     end

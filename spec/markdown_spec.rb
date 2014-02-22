@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Doc2Text::Markdown::Document do
   before :all do
-    @odt = Doc2Text::Odt.new ''
+    @odt = Doc2Text::Odt::Document.new ''
     def @odt.extract_path
       'spec/testdata'
     end
@@ -17,6 +17,6 @@ describe Doc2Text::Markdown::Document do
 
   it 'support xpath' do
     result = @markdown.xpath '/office:document-content/office:automatic-styles/style:style'
-    result.length.should be 5
+    result.length.should be 10
   end
 end

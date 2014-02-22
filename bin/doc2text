@@ -3,4 +3,4 @@
 $LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
 require 'doc2text'
 
-Doc2Text::Odt.parse_and_save *ARGV
+Doc2Text::Odt::Document.parse_and_save *ARGV

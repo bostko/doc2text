@@ -4,6 +4,7 @@ module Doc2Text
       class Generic
         include Node
       end
+
       #
       # These are the namespaces available in the open document format
       # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os.html
@@ -104,6 +105,10 @@ module Doc2Text
           include Node
           include Text
 
+          def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_document = nil)
+            super parent, attrs, prefix, name, markdown_document
+          end
+
           def self.style_family
             'paragraph'
           end
@@ -128,7 +133,6 @@ module Doc2Text
         # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-part1.html#__RefHeading__1419264_253892949
         class Span
           include Node
-
           include Text
 
           def self.style_family
@@ -147,8 +151,17 @@ module Doc2Text
         # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-part1.html#__RefHeading__1415154_253892949
         class ListItem
           include Node
+          include Text
 
-          #child :p, close: false
+          not_enclosing 'p'
+
+          def open
+            '* '
+          end
+
+          def close
+            "\n"
+          end
         end
       end
     end

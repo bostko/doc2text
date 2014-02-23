@@ -2,7 +2,7 @@ module Doc2Text
   module Odt
     module XmlNodes
       module Node
-        attr_reader :parent, :children, :attrs
+        attr_reader :parent, :children, :attrs, :prefix, :name
 
         def self.create_node(prefix, name, parent = nil, attrs = [], markdown_document = nil)
           begin
@@ -21,10 +21,15 @@ module Doc2Text
         def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_document = nil)
           @parent, @attrs, @prefix, @name = parent, attrs, prefix, name
           @children = []
+          @has_text = false
         end
 
         def root?
           !@parent
+        end
+
+        def has_text?
+          @has_text
         end
 
         def open
@@ -69,13 +74,22 @@ module Doc2Text
           "#{xml_name} : #{attrs}"
         end
 
+        def not_enclosing?
+          !root? && parent.class.not_enclosing_tags && parent.class.not_enclosing_tags.find do |tag|
+            @prefix == parent.prefix && @name == tag
+          end
+        end
+
         def self.included(base)
           base.extend ClassMethods
         end
 
         module ClassMethods
-          def child_options(options)
-            @child_options = options
+          attr_reader :not_enclosing_tags
+
+          def not_enclosing(tag)
+            @not_enclosing_tags ||= []
+            @not_enclosing_tags << tag
           end
         end
       end

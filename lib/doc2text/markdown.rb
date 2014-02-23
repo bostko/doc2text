@@ -2,7 +2,7 @@ module Doc2Text
   module Markdown
     class Document
       def initialize(output)
-        @output = File.open output, 'w'
+        @output = output
         @automatic_styles = {}
       end
 
@@ -80,7 +80,6 @@ module Doc2Text
             seek_nodes = seek_nodes.map(&:children).flatten unless index == path.length - 1
             break if seek_nodes.empty?
           end
-
           seek_nodes
         else
           raise Doc2Text::XmlError, 'it does not support this xpath syntax'

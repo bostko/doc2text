@@ -5,10 +5,11 @@ module Doc2Text
     class Document
       EXTRACT_EXTENSION = 'unpacked_odt'
 
-      def self.parse_and_save(input, output)
+      def self.parse_and_save(input, output_filename)
         odt = new input
         begin
           odt.unpack
+          output = File.open output_filename, 'w'
           markdown = Markdown::Document.new output
           begin
             odt.parse markdown

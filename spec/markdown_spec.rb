@@ -6,8 +6,8 @@ describe Doc2Text::Markdown::Document do
     def @odt.extract_path
       'spec/testdata'
     end
-    output = File.open '/dev/null', 'w'
-    @markdown = Doc2Text::Markdown::Document.new output
+    @output = StringIO.new
+    @markdown = Doc2Text::Markdown::Document.new @output
     @odt.parse @markdown
   end
 
@@ -17,6 +17,17 @@ describe Doc2Text::Markdown::Document do
 
   it 'support xpath' do
     result = @markdown.xpath '/office:document-content/office:automatic-styles/style:style'
-    result.length.should be 10
+    result.length.should be 5
+  end
+
+  it 'parses simple bold and italic text' do
+    @output.string.should eq <<MD
+
+Normal text
+
+**Bold text**<br/>_Italic text_<br/>Underline text
+
+_**Bold text & Italic text & Underline text**_
+MD
   end
 end

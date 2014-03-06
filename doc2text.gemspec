@@ -8,4 +8,5 @@ Gem::Specification.new do |s|
   s.summary   = 'Translates doc to markdown and vice-versa'
 
   s.files     = `git ls-files -- lib/*`.split("\n")
+  # test
 end

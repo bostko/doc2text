@@ -12,10 +12,9 @@ describe 'odt' do
 
   it 'can extract a whole document' do
     entries = Dir.glob "#{@odt.extract_path}/**/*"
-    file_list = %w(manifest.rdf Configurations2 Configurations2/accelerator Configurations2/accelerator/current.xml Configurations2/images Configurations2/images/Bitmaps
-       content.xml settings.xml styles.xml META-INF META-INF/manifest.xml meta.xml Thumbnails Thumbnails/thumbnail.png mimetype).map { |entry|
+    mandatory_files = %w(manifest.rdf content.xml settings.xml styles.xml META-INF META-INF/manifest.xml meta.xml mimetype).map { |entry|
       File.join @odt.extract_path, entry }
-    expect(file_list).to eq entries
+    expect(entries.to_set.subset? mandatory_files.to_set)
   end
 end
 

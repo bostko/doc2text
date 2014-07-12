@@ -18,11 +18,6 @@ module Doc2Text
       end
 
       def close_node(prefix, name)
-        #if @current_node.root?
-        #  print_tree @current_node
-        #  puts "Tree printed #{@current_node.root?}"
-        #end
-        #if !@current_node.delete_on_close?
         if Odt::XmlNodes::Node.create_node(prefix, name).eql? @current_node
           if @current_node.delete_on_close?
             remove_current_node!

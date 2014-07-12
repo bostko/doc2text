@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'nokogiri'
 gem 'rubyzip'
+gem 'rake'
 
 group :development do
   gem 'rspec'

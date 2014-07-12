@@ -2,5 +2,42 @@
 
 $LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
 require 'doc2text'
+require 'optparse'
 
-Doc2Text::Odt::Document.parse_and_save *ARGV
+options = {}
+opt_parse = OptionParser.new do |opts|
+  opts.banner = "Usage: doc2text document.odt output.md
+  or:  doc2text [OPTION]... -s input[.odt] -o output[.md]\n\n"
+
+  opts.on('-s FILE', '--source FILE', 'Odt FILE document to be processed') do |file|
+    options[:source] = file
+  end
+
+  opts.on('-o FILE', '--output FILE', 'Output to markdown document FILE') do |file|
+    options[:output] = file
+  end
+
+  opts.on_tail('-h', '--help', 'Show this message') do
+    puts opts
+    exit
+  end
+end
+
+begin
+  opt_parse.parse!
+  if options.empty?
+    if ARGV.size == 2
+      options[:source], options[:output] = *ARGV
+    else
+      puts opt_parse
+      exit
+    end
+  end
+rescue OptionParser::InvalidOption, OptionParser::MissingArgument
+  puts $!.to_s
+  puts opt_parse
+  exit
+end
+
+
+Doc2Text::Odt::Document.parse_and_save options[:source], options[:output]

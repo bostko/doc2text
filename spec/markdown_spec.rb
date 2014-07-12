@@ -17,11 +17,11 @@ describe Doc2Text::Markdown::Document do
 
   it 'support xpath' do
     result = @markdown.xpath '/office:document-content/office:automatic-styles/style:style'
-    result.length.should be 5
+    expect(result.length).to be 5
   end
 
   it 'parses simple bold and italic text' do
-    @output.string.should eq <<MD
+    expect(@output.string).to eq <<MD
 
 Normal text
 

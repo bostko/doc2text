@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'nokogiri'
-gem 'rubyzip'
-gem 'rake'
+gem 'nokogiri', '~> 1.6.2.1'
+gem 'rubyzip', '~> 1.1.6'
+gem 'rake', '~> 10.3.2'
 
 group :development do
-  gem 'rspec'
+  gem 'rspec', '~> 3.0.0'
   gem 'pry'
   gem 'guard-rspec', require: false
 end

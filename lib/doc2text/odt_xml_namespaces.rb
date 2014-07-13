@@ -68,7 +68,8 @@ module Doc2Text
           include Node
 
           def expand
-            "\n#{@children.map(&:expand).join.strip.gsub "\n", ''} |"
+            header_delimiter = parent.children.count >= 2 && parent.children[1] == self ? "\n|---|---|" : ''
+            "\n#{@children.map(&:expand).join.strip.gsub "\n", ''} |#{header_delimiter}"
           end
         end
 

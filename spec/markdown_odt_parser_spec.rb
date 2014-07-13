@@ -88,6 +88,7 @@ XML
 
     expect(@output.string).to eq '
 | A1 | A2 |
+|---|---|
 | B1 | B2 |'
   end
 

@@ -21,7 +21,7 @@ module Doc2Text
         end
 
         def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_odt_parser = nil)
-          @parent, @attrs, @prefix, @name = parent, attrs, prefix, name
+          @parent, @attrs, @prefix, @name, @markdown_odt_parser = parent, attrs, prefix, name, markdown_odt_parser
           @children = []
           @has_text = false
         end
@@ -40,10 +40,6 @@ module Doc2Text
 
         def close
           ''
-        end
-
-        def <<(child)
-          @children << child
         end
 
         def delete_on_close?

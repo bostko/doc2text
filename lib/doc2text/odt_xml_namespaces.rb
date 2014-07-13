@@ -63,7 +63,23 @@ module Doc2Text
       module DataStyle; end
       module Presentation; end
       module Script; end
-      module Table; end
+      module Table
+        class TableRow
+          include Node
+
+          def expand
+            "\n#{@children.map(&:expand).join.strip.gsub "\n", ''} |"
+          end
+        end
+
+        class TableCell
+          include Node
+
+          def open
+            ' | '
+          end
+        end
+      end
       module Style
         class Style
           include Node
@@ -93,7 +109,8 @@ module Doc2Text
           style_index = attrs.index { |attr| attr.prefix == 'text' && attr.localname == 'style-name' }
           @enclosing_style = []
           if style_index and fetch_style?
-            fetch_style attrs[style_index].value
+            elem_style = find_style attrs[style_index].value
+            fetch_style elem_style
           end
         end
 
@@ -101,9 +118,9 @@ module Doc2Text
           true
         end
 
-        def fetch_common_style(style)
-          if style
-            style.children.select { |style_property| style_property.xml_name == 'style:text-properties' }.each { |text_property|
+        def fetch_style(elem_style)
+          if elem_style
+            elem_style.children.select { |style_property| style_property.xml_name == 'style:text-properties' }.each { |text_property|
               text_property.attrs.each { |attr|
                 if attr.prefix == 'style'
                   if attr.localname == 'font-style-complex' && attr.value == 'italic'
@@ -117,11 +134,10 @@ module Doc2Text
           end
         end
 
-        def fetch_style(style_name)
+        def find_style(style_name)
           styles = @markdown_odt_parser.xpath '/office:document-content/office:automatic-styles/style:style'
           style = styles.find { |style| style.attrs.index { |attr| attr.prefix == 'style' && attr.localname == 'family' && attr.value == self.class.style_family } &&
               style.attrs.index { |attr| attr.prefix == 'style' && attr.localname == 'name' && attr.value == style_name } }
-          fetch_common_style style
         end
 
         # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-part1.html#__RefHeading__1419256_253892949
@@ -194,8 +210,18 @@ module Doc2Text
           include Node
           include Text
 
-          def fetch_style?
-            false
+          def fetch_style(elem_style)
+            if elem_style
+              elem_style.children.select { |style_property| style_property.xml_name == 'style:text-properties' }.each { |text_property|
+                text_property.attrs.each { |attr|
+                  if attr.prefix == 'style'
+                    if attr.localname == 'list-level-style-number' && attr.value == 'Numbering_20_Symbols'
+                      @enclosing_style << '_'
+                    end
+                  end
+                }
+              }
+            end
           end
 
           def delete_on_close?

@@ -17,8 +17,3 @@ describe 'odt' do
     expect(entries.to_set.subset? mandatory_files.to_set)
   end
 end
-
-describe 'simple parsing' do
-  it 'simple integration test' do
-  end
-end

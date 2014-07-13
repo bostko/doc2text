@@ -1,6 +1,6 @@
 module Doc2Text
   module Markdown
-    class Document
+    class OdtParser
       def initialize(output)
         @output = output
         @automatic_styles = {}

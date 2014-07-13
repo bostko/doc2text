@@ -4,13 +4,13 @@ module Doc2Text
       module Node
         attr_reader :parent, :children, :attrs, :prefix, :name
 
-        def self.create_node(prefix, name, parent = nil, attrs = [], markdown_document = nil)
+        def self.create_node(prefix, name, parent = nil, attrs = [], markdown_odt_parser = nil)
           begin
             clazz = XmlNodes.const_get "#{titleize prefix}::#{titleize name}"
           rescue NameError => e
-            Generic.new(parent, attrs, prefix, name, markdown_document)
+            Generic.new(parent, attrs, prefix, name, markdown_odt_parser)
           else
-            clazz.new(parent, attrs, prefix, name, markdown_document)
+            clazz.new(parent, attrs, prefix, name, markdown_odt_parser)
           end
         end
 
@@ -18,7 +18,7 @@ module Doc2Text
           tag.split('-').map(&:capitalize).join
         end
 
-        def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_document = nil)
+        def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_odt_parser = nil)
           @parent, @attrs, @prefix, @name = parent, attrs, prefix, name
           @children = []
           @has_text = false

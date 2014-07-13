@@ -26,7 +26,7 @@ module Doc2Text
           include Node
 
           def delete_on_close?
-            false # required for testing purposes. After a document has been parsed, some tests could be run against the tree built
+            true
           end
         end
       end
@@ -67,9 +67,9 @@ module Doc2Text
       module Of; end
 
       module Text
-        def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_document = nil)
-          super parent, attrs, prefix, name, markdown_document
-          @markdown_document = markdown_document
+        def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_odt_parser = nil)
+          super parent, attrs, prefix, name
+          @markdown_odt_parser = markdown_odt_parser
           style_index = attrs.index { |attr| attr.prefix == 'text' && attr.localname == 'style-name' }
           @enclosing_style = []
           if style_index
@@ -94,7 +94,7 @@ module Doc2Text
         end
 
         def fetch_style(style_name)
-          styles = @markdown_document.xpath '/office:document-content/office:automatic-styles/style:style'
+          styles = @markdown_odt_parser.xpath '/office:document-content/office:automatic-styles/style:style'
           style = styles.find { |style| style.attrs.index { |attr| attr.prefix == 'style' && attr.localname == 'family' && attr.value == self.class.style_family } &&
               style.attrs.index { |attr| attr.prefix == 'style' && attr.localname == 'name' && attr.value == style_name } }
           fetch_common_style style
@@ -105,8 +105,8 @@ module Doc2Text
           include Node
           include Text
 
-          def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_document = nil)
-            super parent, attrs, prefix, name, markdown_document
+          def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_odt_parser = nil)
+            super parent, attrs, prefix, name, markdown_odt_parser
           end
 
           def self.style_family
@@ -153,14 +153,25 @@ module Doc2Text
           include Node
           include Text
 
-          not_enclosing 'p'
-
           def open
             '* '
           end
 
           def close
             "\n"
+          end
+
+          def delete_on_close?
+            false
+          end
+        end
+
+        class List
+          include Node
+          include Text
+
+          def delete_on_close?
+            true
           end
         end
       end

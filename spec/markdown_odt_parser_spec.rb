@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Doc2Text::Markdown::Document do
+describe Doc2Text::Markdown::OdtParser do
   before :each do
     @odt = Doc2Text::Odt::Document.new ''
     @output = StringIO.new
-    @markdown = Doc2Text::Markdown::Document.new @output
+    @markdown = Doc2Text::Markdown::OdtParser.new @output
   end
 
   after :each do

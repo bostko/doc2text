@@ -10,7 +10,7 @@ module Doc2Text
         begin
           odt.unpack
           output = File.open output_filename, 'w'
-          markdown = Markdown::Document.new output
+          markdown = Markdown::OdtParser.new output
           begin
             odt.parse markdown
           ensure

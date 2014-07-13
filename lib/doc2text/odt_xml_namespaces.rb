@@ -136,7 +136,7 @@ module Doc2Text
 
         def find_style(style_name)
           styles = @markdown_odt_parser.xpath '/office:document-content/office:automatic-styles/style:style'
-          style = styles.find { |style| style.attrs.index { |attr| attr.prefix == 'style' && attr.localname == 'family' && attr.value == self.class.style_family } &&
+          styles.find { |style| style.attrs.index { |attr| attr.prefix == 'style' && attr.localname == 'family' } &&
               style.attrs.index { |attr| attr.prefix == 'style' && attr.localname == 'name' && attr.value == style_name } }
         end
 

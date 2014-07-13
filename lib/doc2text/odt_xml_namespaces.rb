@@ -92,9 +92,13 @@ module Doc2Text
           @markdown_odt_parser = markdown_odt_parser
           style_index = attrs.index { |attr| attr.prefix == 'text' && attr.localname == 'style-name' }
           @enclosing_style = []
-          if style_index
+          if style_index and fetch_style?
             fetch_style attrs[style_index].value
           end
+        end
+
+        def fetch_style?
+          true
         end
 
         def fetch_common_style(style)
@@ -173,12 +177,12 @@ module Doc2Text
           include Node
           include Text
 
-          def open
-            '* '
+          def expand
+            "* #{@children.map(&:expand).join.strip.gsub /\n{2,}/, "\n"}\n"
           end
 
-          def close
-            "\n"
+          def fetch_style?
+            false
           end
 
           def delete_on_close?
@@ -189,6 +193,10 @@ module Doc2Text
         class List
           include Node
           include Text
+
+          def fetch_style?
+            false
+          end
 
           def delete_on_close?
             true

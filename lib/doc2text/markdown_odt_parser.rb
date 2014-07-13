@@ -1,3 +1,5 @@
+require 'logger'
+
 module Doc2Text
   module Markdown
     class OdtParser
@@ -13,18 +15,17 @@ module Doc2Text
           new_node = Odt::XmlNodes::Node.create_node prefix, name, @current_node, attrs, self
           @current_node.children << new_node
           @current_node = new_node
-          self << @current_node.open
         end
       end
 
       def close_node(prefix, name)
-        if Odt::XmlNodes::Node.create_node(prefix, name).eql? @current_node
+        if Odt::XmlNodes::Node.create_node(prefix, name, nil, [], self).eql? @current_node
           if @current_node.delete_on_close?
             remove_current_node!
           else
             remove_current_node! false
           end
-        elsif Odt::XmlNodes::Node.create_node(prefix, name).eql? @current_node.parent
+        elsif Odt::XmlNodes::Node.create_node(prefix, name, nil, [], self).eql? @current_node.parent
           if @current_node.parent.delete_on_close?
             remove_current_node!
             remove_current_node!
@@ -38,19 +39,20 @@ module Doc2Text
         end
       end
 
+      def text(string)
+        plain_text = Odt::XmlNodes::PlainText.new(string)
+        @current_node.children << plain_text
+      end
+
       def remove_current_node!(remove = true)
         return if !@current_node
-        self << @current_node.close
+        @output << @current_node.expand if remove
         node_for_deletion = @current_node
         @current_node = @current_node.parent
         return unless @current_node
         if remove
           @current_node.remove_last_child! node_for_deletion
         end
-      end
-
-      def <<(string)
-        @output << string
       end
 
       def close
@@ -79,6 +81,10 @@ module Doc2Text
         else
           raise Doc2Text::XmlError, 'it does not support this xpath syntax'
         end
+      end
+
+      def logger
+        @logger ||= Logger.new(STDOUT)
       end
     end
   end

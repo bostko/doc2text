@@ -1,6 +1,18 @@
 module Doc2Text
   module Odt
     module XmlNodes
+      class PlainText
+        include Node
+
+        attr_accessor :text
+
+        alias_method :expand, :text
+
+        def initialize(text)
+          @text = text
+        end
+      end
+
       class Generic
         include Node
       end
@@ -23,6 +35,14 @@ module Doc2Text
         end
 
         class DocumentContent
+          include Node
+
+          def delete_on_close?
+            true
+          end
+        end
+
+        class Text
           include Node
 
           def delete_on_close?

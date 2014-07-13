@@ -3,11 +3,13 @@ module Doc2Text
     module XmlNodes
       module Node
         attr_reader :parent, :children, :attrs, :prefix, :name
+        attr_accessor :text
 
         def self.create_node(prefix, name, parent = nil, attrs = [], markdown_odt_parser = nil)
           begin
             clazz = XmlNodes.const_get "#{titleize prefix}::#{titleize name}"
           rescue NameError => e
+            # markdown_odt_parser.logger.warn "No such <#{prefix}:#{name}> found"
             Generic.new(parent, attrs, prefix, name, markdown_odt_parser)
           else
             clazz.new(parent, attrs, prefix, name, markdown_odt_parser)
@@ -45,7 +47,7 @@ module Doc2Text
         end
 
         def delete_on_close?
-          true
+          false
         end
 
         def eql?(object)
@@ -72,6 +74,10 @@ module Doc2Text
 
         def to_s
           "#{xml_name} : #{attrs}"
+        end
+
+        def expand
+          "#{open}#{@children.map(&:expand).join}#{close}"
         end
 
         def not_enclosing?

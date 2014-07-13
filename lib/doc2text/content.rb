@@ -16,7 +16,7 @@ module Doc2Text
 
         def characters(string)
           unless string.strip.empty?
-            @markdown_odt_parser << string
+            @markdown_odt_parser.text string
           end
         end
       end

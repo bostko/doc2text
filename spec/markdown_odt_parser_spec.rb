@@ -13,12 +13,10 @@ describe Doc2Text::Markdown::OdtParser do
 
   it 'Parses paragraphs' do
     paragraphs = <<XML
-<office:body>
-  <office:text>
-    <text:p>Paragraph 1<text:line-break/><text:span>new line</text:span></text:p>
-    <text:p>Paragraph 2</text:p>
-    <text:p>Paragraph 3</text:p>
-  </office:body>
+<office:text>
+  <text:p>Paragraph 1<text:line-break/><text:span>new line</text:span></text:p>
+  <text:p>Paragraph 2</text:p>
+  <text:p>Paragraph 3</text:p>
 </office:text>
 XML
 

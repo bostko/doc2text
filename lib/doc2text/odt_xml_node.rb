@@ -46,6 +46,20 @@ module Doc2Text
           false
         end
 
+        def not_deleted?
+          !@deleted
+        end
+
+        def delete
+          @deleted = true
+          # @children.each { |child| child.delete }
+          # @children = []
+        end
+
+        def un_delete
+          @deleted = false
+        end
+
         def eql?(object)
           return false unless object.is_a? Node
           object.xml_name == xml_name
@@ -53,15 +67,6 @@ module Doc2Text
 
         def generic?
           instance_of? Node
-        end
-
-        def remove_last_child!(child)
-          unless child === @children.last
-            # TODO remove this redundant(tree build algorithm) checks
-            raise Doc2Text::XmlError, "!The child #{child} IS NOT among the children of #{self}"
-          else
-            @children.pop
-          end
         end
 
         def xml_name
@@ -73,7 +78,9 @@ module Doc2Text
         end
 
         def expand
-          "#{open}#{@children.map(&:expand).join}#{close}"
+          expanded = "#{open}#{@children.select(&:not_deleted?).map(&:expand).join}#{close}"
+          delete
+          expanded.clone
         end
 
         def not_enclosing?

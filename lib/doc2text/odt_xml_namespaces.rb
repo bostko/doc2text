@@ -69,7 +69,9 @@ module Doc2Text
 
           def expand
             header_delimiter = parent.children.count >= 2 && parent.children[1] == self ? "\n|---|---|" : ''
-            "\n#{@children.map(&:expand).join.strip.gsub "\n", ''} |#{header_delimiter}"
+            result = "\n#{@children.select(&:not_deleted?).map(&:expand).join.strip.gsub "\n", ''} |#{header_delimiter}"
+            delete
+            result
           end
         end
 
@@ -195,7 +197,9 @@ module Doc2Text
           include Text
 
           def expand
-            "* #{@children.map(&:expand).join.strip.gsub /\n{2,}/, "\n"}\n"
+            result = "* #{@children.select(&:not_deleted?).map(&:expand).join.strip.gsub /\n{2,}/, "\n"}\n"
+            delete
+            result.clone
           end
 
           def fetch_style?
@@ -210,6 +214,10 @@ module Doc2Text
         class List
           include Node
           include Text
+
+          def open
+            "\n"
+          end
 
           def fetch_style(elem_style)
             if elem_style
@@ -226,7 +234,7 @@ module Doc2Text
           end
 
           def delete_on_close?
-            true
+            false
           end
         end
       end

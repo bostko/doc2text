@@ -20,18 +20,18 @@ module Doc2Text
 
       def close_node(prefix, name)
         if Odt::XmlNodes::Node.create_node(prefix, name, nil, [], self).eql? @current_node
+          return if !@current_node
           if @current_node.delete_on_close?
-            remove_current_node!
-          else
-            remove_current_node! false
+            # if @current_node.parent
+            #   @output << @current_node.parent.expand
+            #   @current_node.parent.un_delete
+            # else
+              @output << @current_node.expand
+            # end
           end
-        elsif Odt::XmlNodes::Node.create_node(prefix, name, nil, [], self).eql? @current_node.parent
-          if @current_node.parent.delete_on_close?
-            remove_current_node!
-            remove_current_node!
-          else
-            remove_current_node! false
-            remove_current_node! false
+          @current_node = @current_node.parent
+          if @current_node && @current_node.delete_on_close?
+            @current_node.delete
           end
         else
           # TODO remove this redundant(tree build algorithm) checks
@@ -42,17 +42,6 @@ module Doc2Text
       def text(string)
         plain_text = Odt::XmlNodes::PlainText.new(string)
         @current_node.children << plain_text
-      end
-
-      def remove_current_node!(remove = true)
-        return if !@current_node
-        @output << @current_node.expand if remove
-        node_for_deletion = @current_node
-        @current_node = @current_node.parent
-        return unless @current_node
-        if remove
-          @current_node.remove_last_child! node_for_deletion
-        end
       end
 
       def close

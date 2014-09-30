@@ -1,14 +1,12 @@
 require 'spec_helper'
 
 describe Doc2Text::Markdown::OdtParser do
-  before :each do
+  before do
     @odt = Doc2Text::Odt::Document.new ''
     @output = StringIO.new
-    @markdown = Doc2Text::Markdown::OdtParser.new @output
-  end
-
-  after :each do
-    @markdown.close
+    @markdown_odt_parser = Doc2Text::Markdown::OdtParser.new @output
+    content = ::Doc2Text::Odt::Content::Document.new @markdown_odt_parser
+    @parser = Nokogiri::XML::SAX::Parser.new(content)
   end
 
   it 'Parses paragraphs' do
@@ -20,11 +18,8 @@ describe Doc2Text::Markdown::OdtParser do
       </office:text>
 XML
 
-    content = ::Doc2Text::Odt::Content::Document.new @markdown
-    parser = Nokogiri::XML::SAX::Parser.new(content)
-    parser.parse StringIO.new(paragraphs)
-
-    expect(@output.string).to eq <<MARKDOWN
+    @parser.parse StringIO.new(paragraphs)
+    expect(@output.string.clone).to eq <<MARKDOWN
 
 Paragraph 1<br/>new line
 
@@ -48,11 +43,10 @@ MARKDOWN
       </office:text>
 XML
 
-    content = ::Doc2Text::Odt::Content::Document.new @markdown
-    parser = Nokogiri::XML::SAX::Parser.new(content)
-    parser.parse StringIO.new(odt_list)
+    @parser.parse StringIO.new(odt_list)
 
     expect(@output.string).to eq <<MARKDOWN
+
 * World
 * Hello
 MARKDOWN
@@ -82,7 +76,7 @@ MARKDOWN
         </table:table>
       </office:text>
 XML
-    content = ::Doc2Text::Odt::Content::Document.new @markdown
+    content = ::Doc2Text::Odt::Content::Document.new @markdown_odt_parser
     parser = Nokogiri::XML::SAX::Parser.new(content)
     parser.parse StringIO.new(odt_table)
 
@@ -92,18 +86,85 @@ XML
 | B1 | B2 |'
   end
 
+  it 'Leading and trailing paragraphs' do
+    content_xml = <<XML
+    <office:text>
+      <text:sequence-decls>
+        <text:sequence-decl text:display-outline-level="0" text:name="Illustration"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Table"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Text"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
+      </text:sequence-decls>
+      <text:p>Leading</text:p>
+      <text:p>Middle</text:p>
+      <text:p>Trailing</text:p>
+    </office:text>
+XML
+
+    @parser.parse StringIO.new(content_xml)
+
+    expect(@output.string).to eq <<MARKDOWN
+
+Leading
+
+Middle
+
+Trailing
+MARKDOWN
+
+  end
+
+  it 'List with leading and trailing paragraphs' do
+    content_xml = <<XML
+    <office:text>
+      <text:sequence-decls>
+        <text:sequence-decl text:display-outline-level="0" text:name="Illustration"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Table"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Text"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
+      </text:sequence-decls>
+      <text:p text:style-name="P5">Leading</text:p>
+      <text:list xml:id="list3312205574515194347" text:style-name="L1">
+        <text:list-item>
+          <text:p text:style-name="P1">World</text:p>
+        </text:list-item>
+        <text:list-item>
+          <text:p text:style-name="P4">Hello</text:p>
+        </text:list-item>
+        <text:list-item>
+          <text:p text:style-name="P2">sadasd</text:p>
+        </text:list-item>
+      </text:list>
+      <text:p text:style-name="P3">Trailing</text:p>
+    </office:text>
+XML
+    @parser.parse StringIO.new(content_xml)
+
+    expect(@output.string).to eq <<MARKDOWN
+
+Leading
+
+* World
+* Hello
+* sadasd
+
+Trailing
+MARKDOWN
+
+  end
+
   it 'supports xpath' do
-    allow(@odt).to receive(:extract_path).and_return('spec/testdata/bold_and_italic')
-    @odt.parse @markdown
-    result = @markdown.xpath '/office:document-content/office:automatic-styles/style:style'
+    expect(@odt).to receive(:extract_path).and_return('spec/testdata/bold_and_italic')
+    @odt.parse @markdown_odt_parser
+    result = @markdown_odt_parser.xpath '/office:document-content/office:automatic-styles/style:style'
     expect(result.length).to be 5
   end
 
   it 'parses simple bold and italic text' do
-    allow(@odt).to receive(:extract_path).and_return('spec/testdata/bold_and_italic')
-    @odt.parse @markdown
+    expect(@odt).to receive(:extract_path).and_return('spec/testdata/bold_and_italic')
+    @odt.parse @markdown_odt_parser
 
-    expect(@output.string).to eq <<MARKDOWN
+    expect(@output.string.clone).to eq <<MARKDOWN
 
 Normal text
 
@@ -111,5 +172,9 @@ Normal text
 
 _**Bold text & Italic text & Underline text**_
 MARKDOWN
+  end
+
+  after do
+    @markdown_odt_parser.close
   end
 end

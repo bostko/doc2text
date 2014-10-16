@@ -3,6 +3,17 @@ doc2text
 
 Convert odt document files to markdown format
 
+Installation
+============
+
+First you have to have ruby on your system.
+Then you can run: `gem install doc2text`
+
+Usage
+=====
+
+`doc2text my_document.odt the_outputdocument.md`
+
 References
 ==========
 

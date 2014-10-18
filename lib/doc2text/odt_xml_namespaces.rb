@@ -24,28 +24,16 @@ module Doc2Text
       module Office
         class AutomaticStyles
           include Node
-
-          def visit
-            :automatic_styles
-          end
-
-          def delete_on_close?
-            false
-          end
         end
 
         class DocumentContent
           include Node
-
-          def delete_on_close?
-            true
-          end
         end
 
         class Text
           include Node
 
-          def delete_on_close?
+          def office_text?
             true
           end
         end
@@ -69,7 +57,7 @@ module Doc2Text
 
           def expand
             header_delimiter = parent.children.count >= 2 && parent.children[1] == self ? "\n|---|---|" : ''
-            result = "\n#{@children.select(&:not_deleted?).map(&:expand).join.strip.gsub "\n", ''} |#{header_delimiter}"
+            result = "\n#{@children.map(&:expand).join.strip.gsub "\n", ''} |#{header_delimiter}"
             delete
             result
           end
@@ -86,18 +74,10 @@ module Doc2Text
       module Style
         class Style
           include Node
-
-          def delete_on_close?
-            false
-          end
         end
 
         class TextProperties
           include Node
-
-          def delete_on_close?
-            false
-          end
         end
       end
       module XslFoCompatible; end
@@ -197,16 +177,12 @@ module Doc2Text
           include Text
 
           def expand
-            result = "* #{@children.select(&:not_deleted?).map(&:expand).join.strip.gsub /\n{2,}/, "\n"}\n"
+            result = "* #{@children.map(&:expand).join.strip.gsub /\n{2,}/, "\n"}\n"
             delete
             result.clone
           end
 
           def fetch_style?
-            false
-          end
-
-          def delete_on_close?
             false
           end
         end
@@ -231,10 +207,6 @@ module Doc2Text
                 }
               }
             end
-          end
-
-          def delete_on_close?
-            false
           end
         end
       end

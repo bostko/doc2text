@@ -42,22 +42,14 @@ module Doc2Text
           ''
         end
 
-        def delete_on_close?
+        def office_text?
           false
         end
 
-        def not_deleted?
-          !@deleted
-        end
-
         def delete
-          @deleted = true
-          # @children.each { |child| child.delete }
-          # @children = []
-        end
-
-        def un_delete
-          @deleted = false
+          return true unless @children
+          @children.each { |child| child.delete }
+          @children = []
         end
 
         def eql?(object)
@@ -78,7 +70,7 @@ module Doc2Text
         end
 
         def expand
-          expanded = "#{open}#{@children.select(&:not_deleted?).map(&:expand).join}#{close}"
+          expanded = "#{open}#{@children.map(&:expand).join}#{close}"
           delete
           expanded.clone
         end

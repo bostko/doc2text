@@ -1,0 +1,4 @@
+test_file,time,memory,cpu i7-3840QM
+OpenDocument-v1.2-os-part1.odt,23.622s,186M
+text_styles2.odt,0.41s,-1
+OpenDocument-v1.2-os-part1.odt (no children delete called),23.8s,257M(big deviation)

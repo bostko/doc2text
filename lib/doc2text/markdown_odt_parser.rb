@@ -19,24 +19,16 @@ module Doc2Text
       end
 
       def close_node(prefix, name)
-        if Odt::XmlNodes::Node.create_node(prefix, name, nil, [], self).eql? @current_node
-          return if !@current_node
-          if @current_node.delete_on_close?
-            # if @current_node.parent
-            #   @output << @current_node.parent.expand
-            #   @current_node.parent.un_delete
-            # else
-              @output << @current_node.expand
-            # end
-          end
-          @current_node = @current_node.parent
-          if @current_node && @current_node.delete_on_close?
+        # if Odt::XmlNodes::Node.create_node(prefix, name, nil, [], self).eql? @current_node
+          if @current_node.parent and @current_node.parent.office_text?
+            @output << @current_node.expand
             @current_node.delete
           end
-        else
-          # TODO remove this redundant(tree build algorithm) checks
-          raise Doc2Text::XmlError, "!Close node child #{prefix} #{name} IS NOT correct, CURRENT_ELEM #{@current_node}"
-        end
+          @current_node = @current_node.parent
+        # else
+        #   # TODO remove this redundant(tree build algorithm) checks
+        #   raise Doc2Text::XmlError, "!Close node child #{prefix} #{name} IS NOT correct, CURRENT_ELEM #{@current_node}"
+        # end
       end
 
       def text(string)

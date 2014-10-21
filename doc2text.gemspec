@@ -8,5 +8,7 @@ Gem::Specification.new do |s|
   s.summary   = 'Translates odt to markdown'
   s.description = 'Parses odt to markdown'
 
+  s.add_runtime_dependency 'nokogiri', '~> 1.6.3'
+  s.add_runtime_dependency 'rubyzip'
   s.files     = `git ls-files -- lib/*`.split("\n")
 end

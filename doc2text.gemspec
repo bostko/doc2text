@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version   = '0.3.1'
   s.authors   = 'Valentin Aitken'
   s.email     = 'bostko@gmail.com'
-  s.homepage  = 'https://github.com/bostko/doc2text'
+  s.homepage  = 'http://doc2text.com'
   s.license   = 'GPL'
   s.summary   = 'Translates odt to markdown'
   s.description = 'Parses odt to markdown'

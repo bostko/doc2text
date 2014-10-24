@@ -9,8 +9,9 @@ module Doc2Text
         odt = new input
         begin
           odt.unpack
+          styles_xml_root = odt.parse_styles
           output = File.open output_filename, 'w'
-          markdown = Markdown::OdtParser.new output
+          markdown = Markdown::OdtParser.new output, styles_xml_root
           begin
             odt.parse markdown
           ensure
@@ -21,9 +22,15 @@ module Doc2Text
         end
       end
 
+      def parse_styles
+        styles_parser = Doc2Text::Odt::StylesParser.new
+        xml = Nokogiri::XML::SAX::Parser.new(styles_parser)
+        xml.parse open 'styles.xml'
+        styles_parser.xml_root
+      end
+
       def parse(markdown)
-        content = ::Doc2Text::Odt::Content::Document.new markdown
-        parser = Nokogiri::XML::SAX::Parser.new(content) # { |config| config.strict}
+        parser = Nokogiri::XML::SAX::Parser.new(markdown) # { |config| config.strict}
         parser.parse open 'content.xml'
       end
 

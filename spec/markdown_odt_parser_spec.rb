@@ -5,8 +5,7 @@ describe Doc2Text::Markdown::OdtParser do
     @odt = Doc2Text::Odt::Document.new ''
     @output = StringIO.new
     @markdown_odt_parser = Doc2Text::Markdown::OdtParser.new @output
-    content = ::Doc2Text::Odt::Content::Document.new @markdown_odt_parser
-    @parser = Nokogiri::XML::SAX::Parser.new(content)
+    @parser = Nokogiri::XML::SAX::Parser.new(@markdown_odt_parser)
   end
 
   it 'Parses paragraphs' do
@@ -76,8 +75,7 @@ MARKDOWN
         </table:table>
       </office:text>
 XML
-    content = ::Doc2Text::Odt::Content::Document.new @markdown_odt_parser
-    parser = Nokogiri::XML::SAX::Parser.new(content)
+    parser = Nokogiri::XML::SAX::Parser.new(@markdown_odt_parser)
     parser.parse StringIO.new(odt_table)
 
     expect(@output.string).to eq '

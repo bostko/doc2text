@@ -40,4 +40,4 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
 end
 
 
-Doc2Text::Odt::Document.parse_and_save options[:source], options[:output]
+Doc2Text::Resolution.parse_and_save options[:source], options[:output]

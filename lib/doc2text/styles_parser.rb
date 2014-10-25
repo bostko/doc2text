@@ -19,6 +19,10 @@ module Doc2Text
 
       def characters(_)
       end
+
+      def xpath(_)
+        []
+      end
     end
   end
 end

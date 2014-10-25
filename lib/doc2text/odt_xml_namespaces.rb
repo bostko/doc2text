@@ -88,7 +88,7 @@ module Doc2Text
       module Text
         def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_odt_parser = nil)
           super parent, attrs, prefix, name
-          @markdown_odt_parser = markdown_odt_parser
+          @xml_parser = markdown_odt_parser
           style_index = attrs.index { |attr| attr.prefix == 'text' && attr.localname == 'style-name' }
           @enclosing_style = []
           if style_index and fetch_style?
@@ -118,7 +118,7 @@ module Doc2Text
         end
 
         def find_style(style_name)
-          styles = @markdown_odt_parser.xpath '/office:document-content/office:automatic-styles/style:style'
+          styles = @xml_parser.xpath '/office:document-content/office:automatic-styles/style:style'
           styles.find { |style| style.attrs.index { |attr| attr.prefix == 'style' && attr.localname == 'family' } &&
               style.attrs.index { |attr| attr.prefix == 'style' && attr.localname == 'name' && attr.value == style_name } }
         end
@@ -168,6 +168,12 @@ module Doc2Text
 
           def close
             @enclosing_style.reverse.join
+          end
+
+          def expand
+            expanded = "#{open}#{@children.map(&:expand).join}#{close}"
+            delete
+            expanded.clone
           end
         end
 

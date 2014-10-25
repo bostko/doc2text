@@ -5,7 +5,7 @@ module Doc2Text
         when '.doc', '.docx'
           mid_name = File.join(File.dirname(output),
                                File.basename(source, File.extname(source)) + '.odt')
-          system "soffice --headless --convert-to odt #{source}"
+          system "soffice --headless --convert-to odt #{source}  --outdir #{File.dirname output}"
           source = mid_name
           Doc2Text::Odt::Document.parse_and_save source, output
           File.delete(mid_name)

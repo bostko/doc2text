@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'odt' do
   before :all do
-    @odt = Doc2Text::Odt::Document.new File.join 'spec', 'testdata', 'text_styles.odt'
+    @odt = Doc2Text::Odt::Document.new File.join 'spec', 'fixtures', 'text_styles.odt'
     @odt.unpack
   end
 

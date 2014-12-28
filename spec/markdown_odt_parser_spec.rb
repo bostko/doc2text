@@ -152,14 +152,14 @@ MARKDOWN
   end
 
   it 'supports xpath' do
-    expect(@odt).to receive(:extract_path).and_return('spec/testdata/bold_and_italic')
+    expect(@odt).to receive(:extract_path).and_return('spec/fixtures/bold_and_italic')
     @odt.parse @markdown_odt_parser
     result = @markdown_odt_parser.xpath '/office:document-content/office:automatic-styles/style:style'
     expect(result.length).to be 5
   end
 
   it 'parses simple bold and italic text' do
-    expect(@odt).to receive(:extract_path).and_return('spec/testdata/bold_and_italic')
+    expect(@odt).to receive(:extract_path).and_return('spec/fixtures/bold_and_italic')
     @odt.parse @markdown_odt_parser
 
     expect(@output.string.clone).to eq <<MARKDOWN

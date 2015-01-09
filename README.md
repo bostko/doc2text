@@ -24,3 +24,5 @@ Use it online
 =============
 
 [doc2text.com](http://doc2text.com)
+
+[![Build Status](https://travis-ci.org/bostko/doc2text.svg?branch=master)](https://travis-ci.org/bostko/doc2text)

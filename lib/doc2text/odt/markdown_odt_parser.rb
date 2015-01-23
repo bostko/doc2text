@@ -11,9 +11,9 @@ module Doc2Text
 
       def start_element_namespace(name ,attrs = [], prefix = nil, uri = nil, ns = [])
         unless @xml_root
-          @xml_root = @current_node = Odt::XmlNodes::Node.create_node prefix, name, nil, attrs, self
+          @xml_root = @current_node = XmlBasedDocument::Odt::XmlNodes::Node.create_node prefix, name, nil, attrs, self
         else
-          new_node = Odt::XmlNodes::Node.create_node prefix, name, @current_node, attrs, self
+          new_node = XmlBasedDocument::Odt::XmlNodes::Node.create_node prefix, name, @current_node, attrs, self
           @current_node.children << new_node
           @current_node = new_node
         end
@@ -29,7 +29,7 @@ module Doc2Text
 
       def characters(string)
         unless string.strip.empty?
-          plain_text = Odt::XmlNodes::PlainText.new(string)
+          plain_text = XmlBasedDocument::Odt::XmlNodes::PlainText.new(string)
           @current_node.children << plain_text
         end
       end

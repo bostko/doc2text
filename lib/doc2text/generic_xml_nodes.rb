@@ -1,23 +1,14 @@
 module Doc2Text
-  module Odt
+  module XmlBasedDocument
     module XmlNodes
-      module Node
+      class Node
         attr_reader :parent, :children, :attrs, :prefix, :name
         attr_accessor :text
 
-        def self.create_node(prefix, name, parent = nil, attrs = [], markdown_odt_parser = nil)
-          begin
-            clazz = XmlNodes.const_get "#{titleize prefix}::#{titleize name}"
-          rescue NameError => e
-            # markdown_odt_parser.logger.warn "No such <#{prefix}:#{name}> found"
-            Generic.new(parent, attrs, prefix, name, markdown_odt_parser)
-          else
-            clazz.new(parent, attrs, prefix, name, markdown_odt_parser)
+        def self.inherited(subclass)
+          def subclass.titleize(tag)
+            tag.split('-').map(&:capitalize).join
           end
-        end
-
-        def self.titleize(tag)
-          tag.split('-').map(&:capitalize).join
         end
 
         def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_odt_parser = nil)
@@ -40,10 +31,6 @@ module Doc2Text
 
         def close
           ''
-        end
-
-        def office_text?
-          false
         end
 
         def delete
@@ -74,24 +61,16 @@ module Doc2Text
           delete
           expanded.clone
         end
+      end
 
-        def not_enclosing?
-          !root? && parent.class.not_enclosing_tags && parent.class.not_enclosing_tags.find do |tag|
-            @prefix == parent.prefix && @name == tag
-          end
-        end
+      class PlainText < Node
 
-        def self.included(base)
-          base.extend ClassMethods
-        end
+        attr_accessor :text
 
-        module ClassMethods
-          attr_reader :not_enclosing_tags
+        alias_method :expand, :text
 
-          def not_enclosing(tag)
-            @not_enclosing_tags ||= []
-            @not_enclosing_tags << tag
-          end
+        def initialize(text)
+          @text = text
         end
       end
     end

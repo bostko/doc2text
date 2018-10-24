@@ -5,7 +5,7 @@ module Doc2Text
         when '.docx'
           Doc2Text::Docx::Document.parse_and_save source, output
         else
-          Doc2Text::Odt::Document.parse_and_save source, output
+          Doc2Text::XmlBasedDocument::Odt::Document.parse_and_save source, output
       end
     end
   end

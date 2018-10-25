@@ -1,3 +1,5 @@
+require 'zip'
+
 module Doc2Text
   module XmlBasedDocument
     class DocumentFile

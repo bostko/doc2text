@@ -4,19 +4,19 @@ module Doc2Text
       class Document < DocumentFile
 
         def self.parse_and_save(input, output_filename)
-          odt = new input
+          docx = new input
           begin
-            odt.unpack
-            styles_xml_root = odt.parse_styles
+            docx.unpack
+            styles_xml_root = docx.parse_styles
             output = File.open output_filename, 'w'
             markdown = Markdown::DocxParser.new output, styles_xml_root
             begin
-              odt.parse markdown
+              docx.parse markdown
             ensure
               markdown.close
             end
           ensure
-            odt.clean
+            docx.clean
           end
         end
 

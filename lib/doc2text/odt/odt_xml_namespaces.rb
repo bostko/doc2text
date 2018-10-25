@@ -146,7 +146,7 @@ module Doc2Text
             end
 
             def close
-              "\n"
+              "\n\n"
             end
           end
 

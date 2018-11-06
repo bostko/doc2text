@@ -8,6 +8,29 @@ describe Doc2Text::Markdown::OdtParser do
     @parser = Nokogiri::XML::SAX::Parser.new(@markdown_odt_parser)
   end
 
+  it 'Parses headers' do
+    paragraphs = <<XML
+      <office:text>
+        <text:h text:outline-level="1">Title 1</text:h>
+        <text:h text:outline-level="2">Title 1.1</text:h>
+        <text:h text:outline-level="1">Title 2</text:h>
+      </office:text>
+XML
+
+    @parser.parse StringIO.new(paragraphs)
+    expect(@output.string.clone).to eq <<MARKDOWN
+
+# Title 1
+
+
+## Title 1.1
+
+
+# Title 2
+
+MARKDOWN
+  end
+
   it 'Parses paragraphs' do
     paragraphs = <<XML
       <office:text>

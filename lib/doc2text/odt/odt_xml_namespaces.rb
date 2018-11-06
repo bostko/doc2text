@@ -123,6 +123,33 @@ module Doc2Text
                   style.attrs.index { |attr| attr.prefix == 'style' && attr.localname == 'name' && attr.value == style_name } }
             end
 
+          # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-part1.html#__RefHeading__1419212_253892949
+          class H < Node
+            include Text
+            def initialize(parent = nil, attrs = [], prefix = nil, name = nil, markdown_odt_parser = nil)
+              super parent, attrs, prefix, name, markdown_odt_parser
+              outline_level_index = attrs.index { |attr| attr.prefix == 'text' && attr.localname == 'outline-level' }
+              if outline_level_index and fetch_style?
+                @elem_outline_level = attrs[outline_level_index].value.to_i
+              else
+                @elem_outline_level = 0
+              end
+
+            end
+
+            def self.style_family
+              'paragraph'
+            end
+
+            def open
+              "\n#{'#' * @elem_outline_level} "
+            end
+
+            def close
+              "\n\n"
+            end
+          end
+
           # http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-part1.html#__RefHeading__1419256_253892949
           class P < Node
             include Text

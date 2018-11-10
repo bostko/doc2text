@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'docx' do
   def rspec_extract_docx
-    @odt = Doc2Text::XmlBasedDocument::Docx::Document.new File.join 'spec', 'fixtures', 'text_styles.docx'
+    @odt = Doc2Text::Docx::Document.new File.join 'spec', 'fixtures', 'text_styles.docx'
     @odt.unpack
 
     entries = Dir.glob "#{@odt.extract_path}/**/*"

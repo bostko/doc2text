@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Doc2Text::Markdown::OdtParser do
   before do
-    @odt = Doc2Text::XmlBasedDocument::Odt::Document.new ''
+    @odt = Doc2Text::Odt::Document.new ''
     @output = StringIO.new
     @markdown_odt_parser = Doc2Text::Markdown::OdtParser.new @output
     @parser = Nokogiri::XML::SAX::Parser.new(@markdown_odt_parser)

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'odt' do
   def rspec_extract_odt
-    @odt = Doc2Text::XmlBasedDocument::Odt::Document.new File.join 'spec', 'fixtures', 'text_styles.odt'
+    @odt = Doc2Text::Odt::Document.new File.join 'spec', 'fixtures', 'text_styles.odt'
     @odt.unpack
 
     entries = Dir.glob "#{@odt.extract_path}/**/*"

@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'nokogiri', '~> 1.8', '>= 1.8.2'
   s.add_runtime_dependency 'rubyzip', '~> 1.2', '>= 1.2.2'
   s.files     = `git ls-files -- lib/* bin/doc2text`.split("\n")
+  s.executables << 'doc2text'
 end

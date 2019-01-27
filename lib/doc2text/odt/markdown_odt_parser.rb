@@ -21,7 +21,7 @@ module Doc2Text
 
       def end_element_namespace(name, prefix = nil, uri = nil)
         if @current_node.parent and @current_node.parent.office_text?
-          @output << @current_node.expand
+          @output.write @current_node.expand
           @current_node.delete
         end
         @current_node = @current_node.parent

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem "nokogiri", ">= 1.10.4"
+gem "nokogiri", ">= 1.10.5"
 gem "rubyzip", ">= 2.0.0"
 gem 'rake', '~> 10.4.2'
 

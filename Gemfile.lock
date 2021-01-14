@@ -36,7 +36,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     racc (1.5.2)
-    rake (10.4.2)
+    rake (12.3.3)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
@@ -63,7 +63,7 @@ DEPENDENCIES
   guard-rspec
   nokogiri (>= 1.11.1)
   pry
-  rake (~> 10.4.2)
+  rake (~> 12.3.3)
   rspec (~> 3.1.0)
   rspec-mocks (~> 3.1)
   rubyzip (>= 2.0.0)

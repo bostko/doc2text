@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.summary   = 'Translates odt to markdown'
   s.description = 'Parses odt to markdown'
 
-  s.add_runtime_dependency 'nokogiri', '~> 1.10.5'
+  s.add_runtime_dependency 'nokogiri', '~> 1.11.1'
   s.add_runtime_dependency 'rubyzip', '~> 2.0.0'
   s.files     = `git ls-files -- lib/* bin/doc2text`.split("\n")
   s.executables << 'doc2text'

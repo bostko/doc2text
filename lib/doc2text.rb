@@ -15,4 +15,8 @@ require 'doc2text/docx/docx'
 require 'doc2text/docx/markdown_docx_parser'
 require 'doc2text/docx/docx_xml_namespaces'
 
+require 'doc2text/pptx/pptx'
+require 'doc2text/pptx/markdown_pptx_parser'
+require 'doc2text/pptx/pptx_xml_namespaces'
+
 require 'doc2text/styles_parser'

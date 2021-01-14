@@ -4,6 +4,8 @@ module Doc2Text
       case File.extname source
         when '.docx'
           Doc2Text::Docx::Document.parse_and_save source, output
+        when '.pptx'
+          Doc2Text::Pptx::Document.parse_and_save source, output
         else
           Doc2Text::Odt::Document.parse_and_save source, output
       end

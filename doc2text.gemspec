@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name      = 'doc2text'
-  s.version   = '0.4.2'
-  s.authors   = 'Valentin Aitken'
+  s.version   = '0.4.3'
+  s.authors   = 'Valentin A.'
   s.email     = 'valentin@nalisbg.com'
   s.homepage  = 'http://doc2text.com'
   s.license   = 'Apache-2.0'

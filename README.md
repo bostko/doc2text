@@ -14,6 +14,11 @@ Usage
 
 `doc2text my_document.odt the_outputdocument.md`
 
+Testing
+=======
+Run `bundle exec rspec` to run the test suite.
+
+
 References
 ==========
 

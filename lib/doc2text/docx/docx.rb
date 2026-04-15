@@ -19,6 +19,18 @@ module Doc2Text
         end
       end
 
+      def parse_styles
+        styles_parser = Doc2Text::Odt::StylesParser.new
+        xml = Nokogiri::XML::SAX::Parser.new(styles_parser)
+        xml.parse open File.join('word', 'styles.xml')
+        styles_parser.xml_root
+      end
+
+      def parse(markdown)
+        parser = Nokogiri::XML::SAX::Parser.new(markdown)
+        parser.parse open File.join('word', 'document.xml')
+      end
+
       def contains_extracted_files?
         File.exist? File.join(extract_path, '[Content_Types].xml')
       end

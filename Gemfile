@@ -1,12 +1,10 @@
 source 'https://rubygems.org'
 
-gem "nokogiri", ">= 1.16.0"
-gem "rubyzip", ">= 2.3.0"
-gem 'rake', '~> 13.0'
+gem "nokogiri", "~> 1.19"
+gem "rubyzip", "~> 3.2"
+gem 'rake', '~> 13.4'
 
 group :development do
-  gem 'rspec', '~> 3.11.0'
-  gem 'rspec-mocks', '~> 3.11'
-  gem 'pry'
-  gem 'guard-rspec', require: false
+  gem 'rspec', '~> 3.13'
+  gem 'rspec-mocks', '~> 3.13'
 end

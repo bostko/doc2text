@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name      = 'doc2text'
-  s.version   = '0.4.9'
+  s.version   = '0.4.10'
   s.authors   = 'Valentin A.'
   s.email     = 'valentin@nalisbg.com'
   s.homepage  = 'http://doc2text.com'

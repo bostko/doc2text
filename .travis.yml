@@ -1,6 +1,0 @@
-language: ruby
-rvm:
-  - 3.3.4
-notifications:
-  email:
-    - bostko@gmail.com

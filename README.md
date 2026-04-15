@@ -25,9 +25,4 @@ References
 * [Open Document Format for Office Applications](http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os.html)
 * [Markdown Syntax](http://daringfireball.net/projects/markdown/syntax#link)
 
-Use it online
-=============
 
-[doc2text.com](http://doc2text.com)
-
-[![Build Status](https://travis-ci.org/bostko/doc2text.svg?branch=master)](https://travis-ci.org/bostko/doc2text)

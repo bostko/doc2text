@@ -1,4 +1,5 @@
 require 'zip'
+require 'tmpdir'
 
 module Doc2Text
   module XmlBasedDocument
@@ -13,7 +14,7 @@ module Doc2Text
           zip_file.each do |entry|
             zipped_file_extract_path = File.join extract_path, entry.name
             FileUtils.mkdir_p File.dirname(zipped_file_extract_path)
-            zip_file.extract entry, zipped_file_extract_path, destination_directory: "/"
+            zip_file.extract entry, entry.name, destination_directory: extract_path
           end
         }
       end

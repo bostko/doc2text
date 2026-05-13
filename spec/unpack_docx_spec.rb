@@ -8,7 +8,7 @@ describe 'docx' do
     entries = Dir.glob "#{@odt.extract_path}/**/*"
     mandatory_files = %w([Content_Types].xml).map { |entry|
       File.join @odt.extract_path, entry }
-    expect(entries.to_set.subset? mandatory_files.to_set)
+    expect(mandatory_files.to_set).to be_subset(entries.to_set)
 
     @odt.clean
   end

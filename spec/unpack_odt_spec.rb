@@ -8,7 +8,7 @@ describe 'odt' do
     entries = Dir.glob "#{@odt.extract_path}/**/*"
     mandatory_files = %w(manifest.rdf content.xml settings.xml styles.xml META-INF META-INF/manifest.xml meta.xml mimetype).map { |entry|
       File.join @odt.extract_path, entry }
-    expect(entries.to_set.subset? mandatory_files.to_set)
+    expect(mandatory_files.to_set).to be_subset(entries.to_set)
 
     @odt.clean
   end
@@ -31,8 +31,9 @@ describe 'odt' do
       entries = Dir.glob "#{@odt.extract_path}/**/*"
       mandatory_files = %w(manifest.rdf content.xml settings.xml styles.xml META-INF META-INF/manifest.xml meta.xml mimetype).map { |entry|
         File.join @odt.extract_path, entry }
-      expect(entries.to_set.subset? mandatory_files.to_set)
+      expect(mandatory_files.to_set).to be_subset(entries.to_set)
 
+      tempfile.unlink
       @odt.clean
     end
   end

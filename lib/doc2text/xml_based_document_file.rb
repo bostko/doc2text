@@ -9,11 +9,21 @@ module Doc2Text
       end
 
       def unpack
+        destination_root = Pathname.new(extract_path).realpath
+
         Zip::File.open(@document_path) {
             |zip_file|
           zip_file.each do |entry|
-            zipped_file_extract_path = File.join extract_path, entry.name
-            FileUtils.mkdir_p File.dirname(zipped_file_extract_path)
+            entry_path = Pathname.new(entry.name)
+
+            next if entry_path.absolute?
+            destination_path = destination_root.join(entry.name).cleanpath
+
+            unless destination_path.to_s.start_with?(destination_root.to_s + File::SEPARATOR)
+              raise "Unsafe zip entry: #{entry.name}"
+            end
+
+            FileUtils.mkdir_p(destination_path.dirname)
             zip_file.extract entry, entry.name, destination_directory: extract_path
           end
         }

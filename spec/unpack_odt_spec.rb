@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'tempfile'
 
 describe 'odt' do
   def rspec_extract_odt
